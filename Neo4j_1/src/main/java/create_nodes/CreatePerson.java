@@ -76,6 +76,16 @@ public class CreatePerson {
 					new FileOutputStream(fileDir), "UTF-8"));
 			out.write("");
 			objects.Person p = new Person();
+			
+			out.append("id"+",");
+			out.append("name"+",");
+			out.append("man"+",");
+			out.append("age"+",");
+			out.append("job"+",");
+			out.append("link"+",");
+			out.append("timeGet"+",");
+			out.append("\r\n");
+			
 			for (int i = 0; i < total; i++) {
 				//sinh ngẫu nhiên 1 đối tượng
 
