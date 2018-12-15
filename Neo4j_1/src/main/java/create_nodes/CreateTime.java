@@ -1,8 +1,7 @@
-package create_nodes;
+package createNode;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,20 +10,28 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
+import objects.Event;
 import objects.Time;
 
-public class CreateTime {
-	// Create Time
-	private ArrayList<Time> createTime(String fileName) {
-		String[] listLinks = {"https://dantri.com.vn/", "vnexpress.net", "tuoitre.vn", "http://vietnamnet.vn/",
-				"https://www.vietnamplus.vn/", "https://vtc.vn/", "https://www.24h.com.vn/", "http://kenh14.vn/"};
-		ArrayList<Time> listTime = new ArrayList<>();
+public class CreateTime extends CreateNode {
+	
+	ArrayList<Time> listTime = new ArrayList<>();
+ 	public CreateTime(int maxNode) {
+		super(365);
+		
+	}
+
+	@Override
+	public void createToCSV(String fileName) {
 		Random rand = new Random();
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(new FileInputStream("src/data/Time.txt"), "UTF-8"));
+			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
 
 			String str;
 			Time time = null;
@@ -34,36 +41,23 @@ public class CreateTime {
 				String s[] = str.split("\\|");
 				String name = s[0];
 				String description = s[1];
-				String id = "TME" + i;
+				int id = 500000000 + i;
 				time = new Time(id, name, description, listLinks[rand.nextInt(listLinks.length)], timeGet);
 				listTime.add(time);
 				i++;
 			}
 
-			in.close();
-		} catch (UnsupportedEncodingException e) {
-			System.out.println(e.getMessage());
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-
-		return listTime;
-	}
-
-	// Write file
-	public void writeFile(String inFileName, String outFileName) throws IOException {
-
-		try {
-
-			File fileDir = new File(outFileName);
-
-			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileDir), "UTF-8"));
 			out.write("");
-			ArrayList<Time> listTime = createTime(inFileName);
+
+			out.append("idNode" + ",");
+			out.append("name" + ",");
+			out.append("description" + ",");
+			out.append("link" + ",");
+			out.append("timeGet" + "");
+			out.append("\r\n");
+
 			for (Time e : listTime) {
-				out.append(e.getId() + ",");
+				out.append(e.getIdNode() + ",");
 				out.append(e.getName() + ",");
 				out.append(e.getDescription() + ",");
 				out.append(e.getLink() + ",");
@@ -74,7 +68,7 @@ public class CreateTime {
 
 			out.flush();
 			out.close();
-
+			in.close();
 		} catch (UnsupportedEncodingException e) {
 			System.out.println(e.getMessage());
 		} catch (IOException e) {
@@ -82,19 +76,24 @@ public class CreateTime {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+
 	}
 
 	public static void main(String[] args) {
-		String inFileName = "Time.txt";
-		String outFileName = "CreateTime.csv";
-		CreateTime ce = new CreateTime();
-		try {
 
-			ce.writeFile(inFileName, outFileName);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("lỗi");
-			e.printStackTrace();
-		}
+		long begin = Calendar.getInstance().getTimeInMillis();
+		// some code.....
+
+		CreateTime cp = new CreateTime(365);
+		cp.createToCSV("src/database/CreateTime.csv");
+		System.out.println("Sinh thanh cong");
+
+		//
+		long end = Calendar.getInstance().getTimeInMillis();
+		System.out.println("time to run: " + (end - begin) + " ms!");
+
 	}
+	
+
+	
 }
